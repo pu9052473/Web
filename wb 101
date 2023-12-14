@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> Registration Form</title>
     <style>
-        /* input#name:invalid:focus{border:1px solid rgb(67, 120, 57)}; */
          body{
            /* background:linear-gradient(to right, #0aff2b, #35b87b); */
            display: flex;
@@ -91,7 +90,6 @@
            border:1px solid rgb(78, 78, 78);
            border-radius:2px;
            invalid:focus{border:1px solid rgb(3, 3, 3)};
-
          }
          #acceptTerms-box{
            margin-top:5px;
@@ -117,7 +115,6 @@
         <label for="name" >Name</label>
         <input required type="text" id="name" name="name" placeholder="Enter your name">
       </div>
-        
          <div id="email-box">
         <label for="email">Email</label>
         <input required type="email" id="email" name="email" placeholder="Enter your email">
@@ -135,32 +132,32 @@
         <label required for="acceptTerms">Accept Terms & Conditions</label>
         </div>
         <div id="submit-box">
-        <button type="submit">Submit</button>
+        <button onclick="saveUserForm(event)" type="submit">Submit</button>
         </div>
-
-        
+        <h1>Entries</h1>
+        <div id="UserEntries"> </div>
     </div>
-
-    <script>
+      
+    <script >
         const email = document.getElementById('email');
         email.addEventListener('input',() => validate(email));
 
-        const submit = document.getElementById('submit');
-        email.addEventListener('click',() => validate(email));
+        // const submit = document.getElementById('submit');
+        // submit.addEventListener('click',() => validate(submit));
                                                                    // to modify the text come in the validation        
         const name = document.getElementById('name');
-        email.addEventListener('input',() => validate(email));
+        name.addEventListener('input',() => validate(name));
 
         const password = document.getElementById('password');
-        email.addEventListener('input',() => validate(email));
+        password.addEventListener('input',() => validate(password));
 
         const dob = document.getElementById('dob');
-        email.addEventListener('input',() => validate(email));
+        dob.addEventListener('input',() => validate(dob));
 
         function validate(element){
             if(element.validity.typeMismatch){
                 element.setCustomValidity("Please fill the right details");  // this text is shown in validation when input is wrong
-                element.reportValidity;
+                element.reportValidity();//
             }
             else{
                 element.setCustomValidity("");     // when input is right the is show nothing mean("")
@@ -168,10 +165,20 @@
         }
         let userform = document.getElementById("user-form");
 let retrieveEnrtries = () => {
-    let entries = localStorage.getItem("UserEntries")
-    if (entries) {
-        entries = JSON.parse(entries);
-    } else {
+    let entries = localStorage.getItem("UserEntries");
+    
+    console.log("Raw entries from localStorage:", entries,typeof entries);
+
+    try {
+        entries = entries ? JSON.parse(entries) : [];
+        console.log("Parsed entries:", entries);
+        
+        if (!Array.isArray(entries)) {
+            entries = [];
+            console.log("Entries is not an array, set to empty array");
+        }
+    } catch (error) {
+        console.error("Error parsing JSON:", error);
         entries = [];
     }
     return entries;
@@ -180,19 +187,17 @@ let Entries = retrieveEnrtries();
 
 let ShowEntries = () => {
     let entries = retrieveEnrtries();
+    console.log("Type of Entries:", typeof Entries);//To see What is type of Entry
     // Show Data In Tabular form
-
-
+    
     const TableENtry = entries.map((entry) => {
-        const nameCell = `<td class="border px-4 py-2">${entry.name}</td>`;
+        const nameCell = `<td class="border px-4 py-2 ">${entry.name}</td>`;
         const emailCell = `<td class="border px-4 py-2">${entry.email}</td>`;
-        const passwordCell = `<td class="border px-4 py-2">${entry.password}</td>`;
-        const dobCell = `<td class="border px-4 py-2"   >${entry.dob}</td>`;
+        const passwordCell = ` <td class="border px-4 py-2">${entry.password}</td>`;
+        const dobCell = `<td class="border px-4 py-2">${entry.dob}</td>`;
+        const acceptedtermscell = `<td class="border px-4 py-2 ">${entry.acceptTermsAndCondition}</td>`;
 
-        const acceptedtermscell = `<td class="border px-4 py-2"   >${entry.acceptTermsAndCondition}</td>`;
-
-
-        const Row = `<tr> ${nameCell} ${emailCell} ${passwordCell} ${dobCell}${acceptedtermscell} </tr>`;
+        const Row = ` <tr> ${nameCell}  ${emailCell}  ${passwordCell}  ${dobCell}  ${acceptedtermscell} </tr> `;
         return Row;
     }).join("\n");
 
@@ -206,11 +211,10 @@ let ShowEntries = () => {
     `;
     let details = document.getElementById("UserEntries");
     details.innerHTML = table;
-
 }
 
 const saveUserForm = (event) => {
-    event.preventDefault()
+    // event.preventDefault()
     const name = document.getElementById("name").value;
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
@@ -224,36 +228,36 @@ const saveUserForm = (event) => {
         return;
     }
 
-    // Validate date of birth
-    const dobDate = new Date(dob);
+    const dobDate = new Date(dob);    // Validate date of birth
     const currentDate = new Date();
     const minAgeDate = new Date(currentDate.getFullYear() - 55, currentDate.getMonth(), currentDate.getDate());
     const maxAgeDate = new Date(currentDate.getFullYear() - 18, currentDate.getMonth(), currentDate.getDate());
 
     if (dobDate < minAgeDate || dobDate > maxAgeDate) {
         alert("Date of birth must be between 18 and 55 years.");
-        return;
-    }
+        return;  }
+    
+    const acceptTermsAndCondition = document.getElementById("acceptTerms").checked;
 
-
-    const acceptTermsAndCondition = document.getElementById("accecptterms").checked;
-
-
+    let existingEntries = retrieveEnrtries();
     const entry = {
         name,
         email,
         password,
         dob,
-        acceptTermsAndCondition
+        acceptTermsAndCondition 
+      };
+    // Entries.push(entry);
+    // localStorage.setItem("UserEntries", JSON.stringify(Entries));
+    existingEntries.push(entry);
 
-    };
-    Entries.push(entry);
+    // Store the updated array back in localStorage
+    localStorage.setItem("UserEntries", JSON.stringify(existingEntries));
 
-    localStorage.setItem("UserEntries", JSON.stringify(Entries));
+    // Show the updated entries
     ShowEntries();
 }
-userform.addEventListener("submit", saveUserForm);
-
+//  localStorage.removeItem("UserEntries")
 ShowEntries();    
     </script>
 </body>
