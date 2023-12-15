@@ -1,0 +1,11 @@
+let greeting=`hello , uday from js file .`;
+ console.log(greeting);
+
+   // check entered password have 8 charecters or not 
+ let password = prompt( "Enter your password ");
+ if( password.length >= 8){
+     console.log("your password is valid !");
+ }
+ else{
+     console.log(" please enter valid password which contains minimum 8 chrarecters ");
+ }
