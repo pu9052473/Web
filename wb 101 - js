@@ -9,3 +9,178 @@ let greeting=`hello , uday from js file .`;
  else{
      console.log(" please enter valid password which contains minimum 8 chrarecters ");
  }
+
+// check enterd gmail is valid or not 
+ let gmail = prompt("Enter the your gmail address");
+ let check = gmail.includes("@gmail.com");
+ if(check){
+     console.log("your gmail address is valid ");
+ }
+ else{
+     console.log("please enter valid gmail address");
+ }
+
+  // compare is user's and acctual password is same or not 
+  let password = "uday@1003"
+  let password1 = prompt("Enter the password");
+  if(password === password1){
+   console.log("welcome user");
+  }
+  else{
+     console.log("you are not the user");
+  }
+
+  // sorting of the strings
+  let countries = ["India","Australiya","Canada","Bhutan"];    
+  console.log(countries);    // before sorting
+  console.log(countries.sort());
+  console.log(countries);    // after sorting
+
+    //using split to convert string into substrings and count the word in the string
+ let essay = `this is a simple array !`;
+ let sub = essay.split(" ");  // convert into substrings by (_)space
+ console.log(sub);
+ console.log(`The count of words of given assay is : ${sub.length}`); 
+
+ //task: check passphrase is satisfied the conditions or not
+   let isValidPassphrase = (text) => {
+    // Fill your code in here, within the braces { ... } of the function `isValidPassphrase`.
+    // We'll learn more about functions in the next level. For now, just write your code "inside" it.
+  
+    // First step. Let's split the text into different words. How do we do that?
+    let words = text.split(' ');
+  
+    // How do we ensure that there are four words?
+    let minimumFourWords = words.length >=4;
+  
+    // Since the number of words in our passphrase is unknown, let's check each word,
+    // regardless of how many there are.
+    let minimumTwoCharsEach = words.every(word => word.length >= 2);
+  
+    // Finally, let's check if both conditions are true...
+    let conditionsSatisfied = minimumFourWords && minimumTwoCharsEach;
+  
+    // Let's "return" the value from this function. We'll learn more about this in the next level.
+    return conditionsSatisfied;
+  }
+
+/* This function should convert a name to initials. Here are few conditions to be met:
+    1. A single worded name must return the first two letters of the word as initials. Eg. John should have an initial JO
+    2. A two worded name must return the first letter of each of the word in the name. Eg. John Doe should have an initial JD
+    3. A name with more words should return the starting letter of the first and the last word as initial. Eg. John Doe Honai should have an initial JH
+    4. The function should return all initials in uppercase.
+*/             //Task: L6                                                   
+ 
+  let createInitialsFromName = (name) => {
+  
+     let word = name.split(' ');     // convert name into new string by saprate (" ")
+ 
+     let wordslength = word.length;
+     let initials = '';
+     if(wordslength === 1){           //"uday"
+       initials = word[0].slice(0,2).toUpperCase();   // splise name by index no.(0,2) = "ud" and convert into uppercase
+     }
+     else if(wordslength === 2){    // "panchal uday"
+       initials = word.map(word=>word[0]).join('').toUpperCase();  //  take both name's index no.(0),take toghether a both into new array ,convert into uppercase
+     }
+     else{              //  "panchal uday dipakbhai"
+       initials = word[0][0] + word[wordslength-1][0]; // take index(0) of word(0),take index(0) of last mean word(total-1)
+       initials = initials.toUpperCase();      //  convert into uppercase
+     }
+   
+     return initials;
+     // Complete the function
+   };
+   console.log(createInitialsFromName("panchal uday"));  //  function call
+
+/*               // Task:L7
+ * The function should return the names of those entries whose date is the current date. The names should be separated by a comma.
+ *
+ * For example, here's an array of three entries and assume the date now is 2022-04-01.
+ *
+ * [{ name: "Harry" , date: "2022-04-01T02:53:42+05:30" }, { name: "Hermione" , date: "2022-04-02T02:53:42+05:30" }, { name: "Ron" , date: "2022-04-01T03:53:42+05:30" }]
+ *
+ * The function should return: ``` Harry,Ron ```. Please note that the names are separated by a comma without space.
+ */
+  let entry=[
+    {name:"pooja",date:"2023-12-11T"},
+    {name:"kishan",date:"2023-12-10T"}, // make variable which have details
+    {name:"uday",date:"2023-12-11T"}
+  ];
+
+  function todaysEntries(entries) {
+  	// Get today's date in the format YYYY-MM-DD
+  	const todaysDate = new Date().toISOString().split('T')[0]; //  separate by'T' and check who have today's date, store into todaysdate
+  	console.log('todaysDate:', todaysDate);
+  
+  	// Filter entries for the current date
+  	const matchingEntries = entries.filter(entry => entry.date.startsWith(todaysDate));  //filter the date whohave today's date mean present date
+  	console.log('matchingEntries:', matchingEntries);
+  
+  	// Extract and concatenate names
+  	const names = matchingEntries.map(entry => entry.name).join(','); //which have today's date sperate and join by (,) 
+  	console.log('names:', names);
+  
+  	return names;
+    }
+    todaysEntries(entry);  // function call
+
+// create object by object intializer
+    let details ={
+      name:"uday",
+      age:19,
+      address:"vithon"
+    };
+     console.log(details);
+    // or we can direct display without using any variables
+     console.log({ 
+     name:"uday",
+     age:19,
+     address:"vithon"});
+
+       // create object by construction function
+    function User(name,age,address){
+       this.name=name;                            // define a function of object
+       this.age=age;
+       this.address=address;
+    };
+
+    let u1= new User('uday',19,'vithon');        // use object by declare new variable
+    console.log(u1);
+
+// add properties after assign the object
+    let user={
+     name:"uday",
+     age:19
+    };    
+     console.log(user);
+    user.address="vithon"         // add property using (.)
+    console.log(user);
+    user["email"]="uday@gmail.com"  //   add property using []
+    console.log(user);
+    user.age=20;                   //update the value
+    console.log(user);
+    delete user.age;               //delete the value
+    console.log(user);
+    console.log(user.name);       //access any key using(.)
+    user ["date-of-birth"]="18-02-2005";
+    console.log(user["date-of-birth"]);  // access by [],any name have space,(-),(/) are only access by using []
+    const uservalues = Object.values(user);
+    console.log(uservalues);                   // access by adding on onther variable
+    const userkeys = Object.keys(user);
+    console.log(userkeys);                   //return name of all keys of object
+    const newObg = {
+       ...user,
+       location:"visnagar"                //  merging object into onther object
+    }
+    console.log(newObg);
+    console.log(Object.freeze(user))      //freeze the original object than after any change will not succid in object
+    user.height = "5.4";
+    console.log(user);                    //this change  will not happen after the freeze
+   console.log(Object.isFrozen(user));    //said that object is frozen or not
+   console.log(Object.seal(user));          //it seals the properties than changes will happen but the add will not happen
+   user.address="visnagar";                   // change will happen
+   console.log(user);
+   console.log(Object.isSealed(user));         // talls that sealed is succed or not
+   user.school = "upasana vidhyalaya"          // but add will not happen
+   console.log(user);
