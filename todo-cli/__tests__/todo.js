@@ -26,7 +26,6 @@ describe("Todolist test suite" , () => {
 })
 */
 
-/*eslint-disable*/
 const todoList = require("../todo");
 
 const { all, markAsComplete, add, overdue, dueToday, dueLater } = todoList();
@@ -95,5 +94,3 @@ describe("Todolist test suite", () => {
     expect(checkTomorrowDate.length).toBe(1); // value is changed so it add , and length become (1)
   });
 });
-
-/* eslint-enable no-unused-vars */
