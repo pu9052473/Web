@@ -26,6 +26,7 @@ describe("Todolist test suite" , () => {
 })
 */
 
+/*eslint-disable*/
 const todoList = require("../todo");
 
 const { all, markAsComplete, add, overdue, dueToday, dueLater } = todoList();
