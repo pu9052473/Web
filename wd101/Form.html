@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Registration Form</title>
+    <style>
+         body{
+           /* background:linear-gradient(to right, #0aff2b, #35b87b); */
+           display: flex;
+           margin:0;
+         }
+          #outer-box{
+           background:linear-gradient(to right , #1fa767, #0aff2b);
+           display: flex;
+           flex-direction: column;
+           position:relative;
+           text-align: center;
+           height: 400px;
+           width: 400px;
+           margin-top:7rem ;
+           margin-left: 33rem;
+           border-radius: 3px;
+           max-width: 100%;
+          }
+          #name-box{
+           margin-top:5px;
+           margin-bottom: 2px;
+           display: flex;
+           flex-direction: column;
+           justify-content: center;
+           padding-bottom: 2px;
+           font-weight:bold ;
+          }
+          #name{
+           margin-left:50px;
+           margin-right: 50px;
+           padding:10px;
+           border:1px solid rgb(78, 78, 78);
+           border-radius:2px;
+           invalid:focus{border:2px solid rgb(3, 3, 3)};
+         }
+         #email-box{
+           margin-top:5px;
+           margin-bottom: 2px;
+           display: flex;
+           flex-direction: column;
+           justify-content: center;
+           padding-bottom: 2px;
+           font-weight:bold ;
+         }
+         #email{
+           margin-left:50px;
+           margin-right: 50px;
+           padding:10px;
+           border:1px solid rgb(78, 78, 78);
+           border-radius:2px;
+           invalid:focus{border:1px solid rgb(3, 3, 3)};
+         }
+         #password-box{
+           margin-top:5px;
+           margin-bottom: 2px;
+           display: flex;
+           flex-direction: column;
+           justify-content: center;
+           padding-bottom: 2px;
+           font-weight:bold ;
+         }
+         #password{
+           margin-left:50px;
+           margin-right: 50px;
+           padding:10px;
+           border:1px solid rgb(78, 78, 78);
+           border-radius:2px;
+           invalid:focus{border:1px solid rgb(3, 3, 3)};
+         }
+         #dob-box{
+           margin-top:5px;
+           margin-bottom: 2px;
+           display: flex;
+           flex-direction: column;
+           justify-content: center;
+           padding-bottom: 2px;
+           font-weight:bold ;
+         }
+         #dob{
+           margin-left:50px;
+           margin-right: 50px;
+           padding:10px;
+           border:1px solid rgb(78, 78, 78);
+           border-radius:2px;
+           invalid:focus{border:1px solid rgb(3, 3, 3)};
+         }
+         #acceptTerms-box{
+           margin-top:5px;
+           margin-bottom: 2px;
+           justify-content: center;
+           padding-bottom: 2px;
+           invalid:focus{border:1px solid rgb(3, 3, 3)};
+           font-weight:bold ;
+         }
+         #submit-box{
+           margin-left:50px;
+           margin-right: 50px;
+           padding:10px;
+           border-radius:2px;
+         }
+       </style>
+</head>
+<body>
+       <a href="/home"> Back to home page </a>
+
+    <div id="outer-box">
+        <h2 style="font-weight: bolder;">Registration form</h2>
+      <form id="user-form">
+        <div id="name-box">
+        <label for="name" >Name</label>
+        <input required type="text" id="name" name="name" placeholder="Enter your name">
+      </div>
+         <div id="email-box">
+        <label for="email">Email</label>
+        <input required type="email" id="email" name="email" placeholder="Enter your email">
+        </div>
+        <div id="password-box">
+        <label for="password">Password</label>
+        <input required type="password" id="password" name="password" placeholder="Enter your password">
+        </div>
+        <div id="dob-box">
+        <label for="dob">Date of Birth</label>
+        <input required type="date" id="dob" name="dob" placeholder="Enter your Date Of Birth">
+        </div>
+        <div id="acceptTerms-box">
+        <input type="checkbox" id="acceptTerms" name="acceptTerms">
+        <label required for="acceptTerms">Accept Terms & Conditions</label>
+        </div>
+        <div id="submit-box">
+        <button onclick="saveUserForm(event)" type="submit">Submit</button>
+        </div>
+        <h1>Entries</h1>
+        <div id="UserEntries"> </div>
+    </div>
+      
+    <script >
+        const email = document.getElementById('email');
+        email.addEventListener('input',() => validate(email));
+
+        // const submit = document.getElementById('submit');
+        // submit.addEventListener('click',() => validate(submit));
+                                                                   // to modify the text come in the validation        
+        const name = document.getElementById('name');
+        name.addEventListener('input',() => validate(name));
+
+        const password = document.getElementById('password');
+        password.addEventListener('input',() => validate(password));
+
+        const dob = document.getElementById('dob');
+        dob.addEventListener('input',() => validate(dob));
+
+        function validate(element){
+            if(element.validity.typeMismatch){
+                element.setCustomValidity("Please fill the right details");  // this text is shown in validation when input is wrong
+                element.reportValidity();//
+            }
+            else{
+                element.setCustomValidity("");     // when input is right the is show nothing mean("")
+            }
+        }
+        let userform = document.getElementById("user-form");
+let retrieveEnrtries = () => {
+    let entries = localStorage.getItem("UserEntries");
+    
+    console.log("Raw entries from localStorage:", entries,typeof entries);
+
+    try {
+        entries = entries ? JSON.parse(entries) : [];
+        console.log("Parsed entries:", entries);
+        
+        if (!Array.isArray(entries)) {
+            entries = [];
+            console.log("Entries is not an array, set to empty array");
+        }
+    } catch (error) {
+        console.error("Error parsing JSON:", error);
+        entries = [];
+    }
+    return entries;
+}
+let Entries = retrieveEnrtries();
+
+let ShowEntries = () => {
+    let entries = retrieveEnrtries();
+    console.log("Type of Entries:", typeof Entries);//To see What is type of Entry
+    // Show Data In Tabular form
+    
+    const TableENtry = entries.map((entry) => {
+        const nameCell = `<td class="border px-4 py-2 ">${entry.name}</td>`;
+        const emailCell = `<td class="border px-4 py-2">${entry.email}</td>`;
+        const passwordCell = ` <td class="border px-4 py-2">${entry.password}</td>`;
+        const dobCell = `<td class="border px-4 py-2">${entry.dob}</td>`;
+        const acceptedtermscell = `<td class="border px-4 py-2 ">${entry.acceptTermsAndCondition}</td>`;
+
+        const Row = ` <tr> ${nameCell}  ${emailCell}  ${passwordCell}  ${dobCell}  ${acceptedtermscell} </tr> `;
+        return Row;
+    }).join("\n");
+
+    const table = `<table class="table-auto w-full"><tr>
+    <th class="px-4 py-2">Name</th> 
+    <th class="px-4 py-2">Email</th> 
+    <th class="px-4 py-2">Password</th> 
+    <th class="px-4 py-2">Dob</th>
+    <th >Accepted terms?</th>
+    </tr>${TableENtry}</table> 
+    `;
+    let details = document.getElementById("UserEntries");
+    details.innerHTML = table;
+}
+
+const saveUserForm = (event) => {
+    // event.preventDefault()
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const dob = document.getElementById("dob").value;
+
+    //validate Email Address
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(email)) {
+        alert("Please enter a valid email address.");
+        return;
+    }
+
+    const dobDate = new Date(dob);    // Validate date of birth
+    const currentDate = new Date();
+    const minAgeDate = new Date(currentDate.getFullYear() - 55, currentDate.getMonth(), currentDate.getDate());
+    const maxAgeDate = new Date(currentDate.getFullYear() - 18, currentDate.getMonth(), currentDate.getDate());
+
+    if (dobDate < minAgeDate || dobDate > maxAgeDate) {
+        alert("Date of birth must be between 18 and 55 years.");
+        return;  }
+    
+    const acceptTermsAndCondition = document.getElementById("acceptTerms").checked;
+
+    let existingEntries = retrieveEnrtries();
+    const entry = {
+        name,
+        email,
+        password,
+        dob,
+        acceptTermsAndCondition 
+      };
+    // Entries.push(entry);
+    // localStorage.setItem("UserEntries", JSON.stringify(Entries));
+    existingEntries.push(entry);
+
+    // Store the updated array back in localStorage
+    localStorage.setItem("UserEntries", JSON.stringify(existingEntries));
+
+    // Show the updated entries
+    ShowEntries();
+}
+//  localStorage.removeItem("UserEntries")                // to remove the entries from the page
+ShowEntries();    
+    </script>
+</body>
+</html>

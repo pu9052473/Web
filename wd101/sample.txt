@@ -1,0 +1,3 @@
+Welcome to node.js streams.
+
+After using the streams function. 
