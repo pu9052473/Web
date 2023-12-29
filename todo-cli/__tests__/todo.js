@@ -1,4 +1,5 @@
-
+/* eslint-disable no-undef */
+/*
 const todoList = require('../todo');  // import the todo.js file 
 
 const { all , markAsComplete , add } = todoList();
@@ -22,43 +23,35 @@ describe("Todolist test suite" , () => {
     expect(all[0].completed).toBe(true);          // the it it check all[0].completed is "true "or not
    })
 })
-
-
-/*
-const todoList = require('../todo');   
-
-const { all , markAsComplete , add } = todoList();
-
-describe("Todolist test suite" , () => {
-  beforeAll( () => {                            // this beforeAll exucute the code which we given inside before the all given code
-    add(                                     
-        {
-    title : "Test todo",
-    completed : false ,
-    dueDate : new Date().toLocaleDateString("en-CA"),
-}
-);
-  });
-
-   test("Should add new todo" , () => {
-    const todoItemsCount = all.length ;                  // this give all.length=(1) to the variable
-    add(                                     
-                {
-            title : "Test todo",
-            completed : false ,
-            dueDate : new Date().toLocaleDateString("en-CA"),
-        }
-    );
-     expect(all.length).toBe( todoItemsCount + 1);       // this give value and expect ( todoItemsCount + 1) = (1+1)    
-   });
-
-   test("Should mark as todo complete" , () => {
-    expect(all[0].completed).toBe(false);         
-    markAsComplete(0);                            
-    expect(all[0].completed).toBe(true);          
-   })
-})
 */
 
+const todoList = require("../todo");
 
+const { all, markAsComplete, add } = todoList();
 
+describe("Todolist test suite", () => {
+  beforeAll(() => {
+    // this beforeAll exucute the code which we given inside before the all given code
+    add({
+      title: "Test todo",
+      completed: false,
+      dueDate: new Date().toLocaleDateString("en-CA"),
+    });
+  });
+
+  test("Should add new todo", () => {
+    const todoItemsCount = all.length; // this give all.length=(1) to the variable
+    add({
+      title: "Test todo",
+      completed: false,
+      dueDate: new Date().toLocaleDateString("en-CA"),
+    });
+    expect(all.length).toBe(todoItemsCount + 1); // this give value and expect ( todoItemsCount + 1) = (1+1)
+  });
+
+  test("Should mark as todo complete", () => {
+    expect(all[0].completed).toBe(false);
+    markAsComplete(0);
+    expect(all[0].completed).toBe(true);
+  });
+});
