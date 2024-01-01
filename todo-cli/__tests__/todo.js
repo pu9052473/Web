@@ -27,6 +27,7 @@ describe("Todolist test suite" , () => {
 */
 
 /*eslint-disable*/
+/*
 const todoList = require("../todo");
 
 const { all, markAsComplete, add, overdue, dueToday, dueLater } = todoList();
@@ -95,3 +96,26 @@ describe("Todolist test suite", () => {
     expect(checkTomorrowDate.length).toBe(1); // value is changed so it add , and length become (1)
   });
 });
+*/
+
+// use this for test in DataBase by scripts in the package.json is "db:create:test": "cross-env NODE_ENV=test sequelize-cli db:create"
+/*
+const db = require("../models");
+
+describe("Todolist Test Suite", () => {
+  beforeAll(async () => {
+    await db.sequelize.sync({ force: true });
+  });
+
+  test("Should add new todo", async () => {
+    const todoItemsCount = await db.Todo.count();
+    await db.Todo.addTask({
+      title: "Test todo",
+      completed: false,
+      dueDate: new Date(),
+    });
+    const newTodoItemsCount = await db.Todo.count();
+    expect(newTodoItemsCount).toBe(todoItemsCount + 1);
+  });
+});
+*/
