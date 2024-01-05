@@ -23,6 +23,12 @@ module.exports = (sequelize, DataTypes) => {
     markAsCompleted() {
       return this.update({ completed: true });
     }
+
+    // to delete the route from the postman
+    static deletetodo() {
+      return this.destroy();
+    }
+    
   }
   Todo.init(
     {
