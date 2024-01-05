@@ -13,17 +13,14 @@
     "lint": "eslint .",
     "precommit": "npm run test && npm run format"
   },
-
   "husky": {
     "hooks": {
-        "pre-commit": "npm run precommit"
+      "pre-commit": "npm run precommit"
     }
-},
-
-"jest": {
+  },
+  "jest": {
     "testEnvironment": "node"
-},
-
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {

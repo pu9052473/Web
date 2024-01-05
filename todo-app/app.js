@@ -14,34 +14,28 @@ app.use(bodyParser.json());
     app.METHOD(path,Callback [,Callback ...])  // callback take two parameter (request, response) , request take the request , respose do the work in the body of route
 */
 
-app.get("/", async (request, response) => {
-  // response.send("Hello World");
-  const allTodo = await Todo.getTodo();
-  const overdueTodos = await Todo.overdue();
-  const dueTodayTodos = await Todo.dueToday();
-  const dueLaterTodos = await Todo.dueLater();
-  // const markAsCompleted = await Todo.markAsCompleted();
-  // const Delete = await Todo.deletetodo()
+app.set("view engine", "ejs"); // it calls file who have ejs and set that as view engine
 
+app.get("/", async (request, response) => {
+  const allTodos = await Todo.getTodos();
   if (request.accepts("html")) {
+    // if there is an "html" inside the web page then ,
     response.render("index", {
-      allTodo,
-      overdueTodos,
-      dueTodayTodos,
-      dueLaterTodos,
+      // takes render the index
+      allTodos, // call allTodos tha contais all todo list
     });
   } else {
-    response.json({ allTodo });
+    response.json({
+      // else there is an json from the postman then also
+      allTodos, // call allTodos tha contais all todo list
+    });
   }
 });
 
 app.use(express.static(path.join(__dirname, "public")));
-app.set("view engine", "ejs");
 
 app.get("/todos", async (request, response) => {
-  // this is root route for this express app
-  // response.send("Hello World");
-  console.log("Processing list of all todos ...");
+  console.log("Processing list of all Todos ...");
 
   try {
     const todos = await Todo.findAll();
@@ -50,13 +44,9 @@ app.get("/todos", async (request, response) => {
     console.log(error);
     return response.status(500).json({ error: "Internal Server Error" });
   }
-
-  // First, we have to query our PostgerSQL database using Sequelize to get list of all Todos.
-  // Then, we have to respond with all Todos, like:
-  // response.send(todos)
 });
 
-app.get("/todos/:id", async (request, response) => {
+app.get("/todos/:id", async function (request, response) {
   try {
     const todo = await Todo.findByPk(request.params.id);
     return response.json(todo);
@@ -71,13 +61,13 @@ app.post("/todos", async (request, response) => {
   // console.log("Creating a todo", request.body); // this post the our todo , that we are created
   // Todo
   try {
-    const todo = await Todo.addTodo({
-      // before hear .create , after we create todo in the (models/todo.js) we call it from there
-      title: request.body.title,
-      dueDate: request.body.dueDate,
-      // completed: false,
-    }); //create an todo , give await for it done first
-    return response.redirect("/"); // return the "todo" in the response
+    const todo = await Todo.addTodo(request.body);
+    // before hear .create , after we create todo in the (models/todo.js) we call it from there
+    // title: request.body.title,
+    // dueDate: request.body.dueDate,
+    // completed: false,
+    //create an todo , give await for it done first
+    return response.json(todo); // return the "todo" in the response
   } catch (error) {
     console.log(error);
     return response.status(422).json(error); // status(422) says "unprosaseble entry" , mean there is an "error"
@@ -98,19 +88,18 @@ app.put("/todos/:id/markAsCompleted", async (request, response) => {
   }
 });
 
-app.delete("/todos/id", async (request, response) => {
-  console.log("Deleted a todo by ID", request.params.id); //this deleted the todo by it's id
+app.delete("/todos/:id", async (request, response) => {
+  console.log("We have to delete a Todo with ID: ", request.params.id);
 
   try {
-    const deleteItem = await Todo.destroy({
+    const deleteTodo = await Todo.destroy({
       where: {
         id: request.params.id,
       },
     });
-    response.send(deleteItem ? true : false);
+    response.send(deleteTodo ? true : false);
   } catch (error) {
     console.log(error);
-    return response.status(422).json(error);
   }
 });
 

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="./css/style.css" rel="stylesheet">
+    <title>Document</title>
+</head>
+<body>
+    <!-- this is an javascript code , this include the all content which is in the "header.ejs" file contain -->
+    <%- include('header.ejs') %>  
+
+    
+<table>
+    <!-- we create a for loop for display the allTodos -->
+    <% for( var i = 0 ; i < allTodos.length ; i++) { %>
+        <tr>
+            <td> 
+                <%= allTodos[i].title %>
+            </td>
+          </tr>
+
+          <tr>
+            <td> 
+                <%= allTodos[i].dueDate %>
+            </td>
+          </tr>
+
+   <% } %>
+</table>
+
+</body>
+</html>

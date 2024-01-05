@@ -9,9 +9,9 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    // static associate(models) {
-    //   // define association here
-    // }
+    static associate(models) {
+      // define association here
+    }
 
     // create the todo by static method with is connected to the "index.js"
     // we use this because we made a single or more update in this todo , that affect and connect the all todo which is connected to this todo
@@ -19,11 +19,21 @@ module.exports = (sequelize, DataTypes) => {
       return this.create({ title: title, dueDate: dueDate, completed: false });
     }
 
+    static getTodos() {
+      return this.findAll();
+    }
+
     // use intens method for update the "markAsCompleted"
     markAsCompleted() {
       return this.update({ completed: true });
     }
+
+    // to delete the route from the postman
+    static deletetodo() {
+      return this.destroy();
+    }
   }
+
   Todo.init(
     {
       title: DataTypes.STRING,
