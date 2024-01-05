@@ -3,7 +3,7 @@
 const express = require("express"); // import express module
 const app = express(); // create app inside the express module
 const { Todo } = require("./models"); // for the todo work we connect to the "models"
-// const path = require("path");
+const path = require("path");
 const bodyParser = require("body-parser"); // for the work "request.body" of (app.post)
 app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -14,17 +14,25 @@ app.use(bodyParser.json());
     app.METHOD(path,Callback [,Callback ...])  // callback take two parameter (request, response) , request take the request , respose do the work in the body of route
 */
 
-// app.set("view engine", "ejs"); // it calls file who have ejs and set that as view engine
+app.set("view engine", "ejs"); // it calls file who have ejs and set that as view engine
 
-// app.get("/", (request, response) => {
-//   response.render("index"); // it et the data from the ejs index file take the all content and set into the wab page
-// });
-
-app.get("/", (request, response) => {
-  // this is root route for this express app
-  response.send("Hello World");
-  // console.log("Todo List", request.body);
+app.get("/", async (request, response) => {
+  const allTodos = await Todo.getTodos();
+  if (request.accepts("html")) {
+    // if there is an "html" inside the web page then ,
+    response.render("index", {
+      // takes render the index
+      allTodos, // call allTodos tha contais all todo list
+    });
+  } else {
+    response.json({
+      // else there is an json from the postman then also
+      allTodos, // call allTodos tha contais all todo list
+    });
+  }
 });
+
+app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/todos", async (request, response) => {
   console.log("Processing list of all Todos ...");
@@ -80,18 +88,18 @@ app.put("/todos/:id/markAsCompleted", async (request, response) => {
   }
 });
 
-app.delete("/todos/id/deleteitem", async (request, response) => {
+app.delete("/todos/:id", async (request, response) => {
   console.log("We have to delete a Todo with ID: ", request.params.id);
-  const ID = request.params.id;
-  const todo = await Todo.findByPk(request.params.id);
 
   try {
-    await todo.destroy();
-    console.log(`Item with id:${ID} Deleted`);
-    response.send.true;
+    const deleteTodo = await Todo.destroy({
+      where: {
+        id: request.params.id,
+      },
+    });
+    response.send(deleteTodo ? true : false);
   } catch (error) {
     console.log(error);
-    response.send.false;
   }
 });
 
