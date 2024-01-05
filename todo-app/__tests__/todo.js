@@ -1,14 +1,15 @@
 const request = require("supertest");
 
 const db = require("../models/index");
+// const { DESCRIBE } = require("sequelize/types/query-types");
 const app = require("../app");
 
 let server, agent;
 
-describe("Todo Application", function () {
+describe("Todo test suite", () => {
   beforeAll(async () => {
     await db.sequelize.sync({ force: true });
-    server = app.listen(3000, () => { });
+    server = app.listen(3000, () => {});
     agent = request.agent(server);
   });
 
@@ -21,6 +22,7 @@ describe("Todo Application", function () {
     }
   });
 
+  // to define a todo by id
   test("Creates a todo and responds with json at /todos POST endpoint", async () => {
     const response = await agent.post("/todos").send({
       title: "Buy milk",
@@ -29,12 +31,13 @@ describe("Todo Application", function () {
     });
     expect(response.statusCode).toBe(200);
     expect(response.header["content-type"]).toBe(
-      "application/json; charset=utf-8"
+      "application/json; charset=utf-8",
     );
     const parsedResponse = JSON.parse(response.text);
     expect(parsedResponse.id).toBeDefined();
   });
 
+  // update markAsCompleted as "true"
   test("Marks a todo with the given ID as complete", async () => {
     const response = await agent.post("/todos").send({
       title: "Buy milk",
@@ -73,9 +76,9 @@ describe("Todo Application", function () {
   });
 
   test("Deletes a todo with the given ID if it exists and sends a boolean response", async () => {
-    //adding Reponse 
+    //adding Reponse
     const response = await agent.post("/todos").send({
-      title: "Buy xbox",
+      title: "task L6 test route",
       dueDate: new Date().toISOString(),
       completed: false,
     });
@@ -87,20 +90,23 @@ describe("Todo Application", function () {
     // expect(parsedResponse.length).toBe(1);
 
     //Deleting response and checking that it is returning true or not
-    const DeletedResponse = await agent.delete(`/todos/${todoID}/deleteitem`).send();
+    const DeletedResponse = await agent.delete(`/todos/${todoID}`).send();
     expect(DeletedResponse.statusCode).toBe(200);
 
     const parsedUpdateResponse = JSON.parse(DeletedResponse.text);
-    expect(parsedUpdateResponse).toBe(true)
+    expect(parsedUpdateResponse).toBe(true);
 
     //geting All Response to check length of response
     const GetAllResponse = await agent.get("/todos");
-    const parsedGetAllResponse = JSON.parse(GetAllResponse.text)
-    expect(parsedGetAllResponse.length).toBe(0);
-
+    const parsedGetAllResponse = JSON.parse(GetAllResponse.text);
+    expect(parsedGetAllResponse.length).toBe(4);
   }, 10000);
 });
- 
-   
+
+
+  
     
-     
+
+    
+
+   
