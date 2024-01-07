@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-labels */
 /* eslint-disable no-unused-vars */
 //  const { request, response } = require("express");
 const express = require("express"); // import express module
@@ -54,6 +55,24 @@ app.set("view engine", "ejs"); // it calls file who have ejs and set that as vie
 //   }
 // });
 
+app.post("/todos", async (request, response) => {
+  // use async for to give the condition which will work first
+  console.log("Creating a todo", request.body); // this post the our todo , that we are created
+  // Todo
+  try {
+    const todo = await Todo.addTodo(request.body);
+    // before hear .create , after we create todo in the (models/todo.js) we call it from there
+    title: request.body.title;
+    dueDate: request.body.dueDate;
+    // completed: false,
+    //create an todo , give await for it done first
+    return response.redirect("/"); // return the "todo" in the response
+  } catch (error) {
+    console.log(error);
+    return response.status(422).json(error); // status(422) says "unprosaseble entry" , mean there is an "error"
+  }
+});
+
 app.get("/todos", async (request, response) => {
   console.log("Processing list of all Todos ...");
 
@@ -75,24 +94,6 @@ app.get("/todos/:id", async function (request, response) {
     return response.status(422).json(error);
   }
 });
-
-// app.post("/todos", async (request, response) => {
-//   // use async for to give the condition which will work first
-//   // console.log("Creating a todo", request.body); // this post the our todo , that we are created
-//   // Todo
-//   try {
-//     const todo = await Todo.addTodo(request.body);
-//     // before hear .create , after we create todo in the (models/todo.js) we call it from there
-//     // title: request.body.title,
-//     // dueDate: request.body.dueDate,
-//     // completed: false,
-//     //create an todo , give await for it done first
-//     return response.json(todo); // return the "todo" in the response
-//   } catch (error) {
-//     console.log(error);
-//     return response.status(422).json(error); // status(422) says "unprosaseble entry" , mean there is an "error"
-//   }
-// });
 
 app.post("/todos", async function (request, response) {
   try {
