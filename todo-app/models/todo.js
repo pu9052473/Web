@@ -33,18 +33,6 @@ module.exports = (sequelize, DataTypes) => {
       return this.destroy({ where: { id: this.id } });
     }
 
-    static async dueLater() {
-      return this.findAll({
-        where: {
-          dueDate: {
-            [Op.gt]: new Date().toISOString().split("T")[0],
-          },
-          completed: false,
-        },
-        order: [["id", "ASC"]],
-      });
-    }
-
     static async overdue() {
       return this.findAll({
         where: {
@@ -68,6 +56,19 @@ module.exports = (sequelize, DataTypes) => {
         order: [["id", "ASC"]],
       });
     }
+
+    static async dueLater() {
+      return this.findAll({
+        where: {
+          dueDate: {
+            [Op.gt]: new Date().toISOString().split("T")[0],
+          },
+          completed: false,
+        },
+        order: [["id", "ASC"]],
+      });
+    }
+
     markAsCompleted(bool) {
       return this.update({ completed: bool });
     }
