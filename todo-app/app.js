@@ -14,25 +14,45 @@ app.use(bodyParser.json());
     app.METHOD(path,Callback [,Callback ...])  // callback take two parameter (request, response) , request take the request , respose do the work in the body of route
 */
 
-app.set("view engine", "ejs"); // it calls file who have ejs and set that as view engine
+app.get("/", async function (request, response) {
+  // response.send("Hello World");
+  const allTodo = await Todo.getTodo();
+  const overdueTodos = await Todo.overdue();
+  const dueTodayTodos = await Todo.dueToday();
+  const dueLaterTodos = await Todo.dueLater();
+  // const markAsCompleted = await Todo.markAsCompleted();
+  // const Delete = await Todo.deletetodo({ where: { id: Todo.id } })
 
-app.get("/", async (request, response) => {
-  const allTodos = await Todo.getTodos();
   if (request.accepts("html")) {
-    // if there is an "html" inside the web page then ,
     response.render("index", {
-      // takes render the index
-      allTodos, // call allTodos tha contais all todo list
+      allTodo,
+      overdueTodos,
+      dueTodayTodos,
+      dueLaterTodos,
     });
   } else {
-    response.json({
-      // else there is an json from the postman then also
-      allTodos, // call allTodos tha contais all todo list
-    });
+    response.json({ allTodo });
   }
 });
 
 app.use(express.static(path.join(__dirname, "public")));
+app.set("view engine", "ejs"); // it calls file who have ejs and set that as view engine
+
+// app.get("/", async (request, response) => {
+//   const allTodos = await Todo.getTodos();
+//   if (request.accepts("html")) {
+//     // if there is an "html" inside the web page then ,
+//     response.render("index", {
+//       // takes render the index
+//       allTodos, // call allTodos tha contais all todo list
+//     });
+//   } else {
+//     response.json({
+//       // else there is an json from the postman then also
+//       allTodos, // call allTodos tha contais all todo list
+//     });
+//   }
+// });
 
 app.get("/todos", async (request, response) => {
   console.log("Processing list of all Todos ...");
@@ -56,50 +76,75 @@ app.get("/todos/:id", async function (request, response) {
   }
 });
 
-app.post("/todos", async (request, response) => {
-  // use async for to give the condition which will work first
-  // console.log("Creating a todo", request.body); // this post the our todo , that we are created
-  // Todo
+// app.post("/todos", async (request, response) => {
+//   // use async for to give the condition which will work first
+//   // console.log("Creating a todo", request.body); // this post the our todo , that we are created
+//   // Todo
+//   try {
+//     const todo = await Todo.addTodo(request.body);
+//     // before hear .create , after we create todo in the (models/todo.js) we call it from there
+//     // title: request.body.title,
+//     // dueDate: request.body.dueDate,
+//     // completed: false,
+//     //create an todo , give await for it done first
+//     return response.json(todo); // return the "todo" in the response
+//   } catch (error) {
+//     console.log(error);
+//     return response.status(422).json(error); // status(422) says "unprosaseble entry" , mean there is an "error"
+//   }
+// });
+
+app.post("/todos", async function (request, response) {
   try {
-    const todo = await Todo.addTodo(request.body);
-    // before hear .create , after we create todo in the (models/todo.js) we call it from there
-    // title: request.body.title,
-    // dueDate: request.body.dueDate,
-    // completed: false,
-    //create an todo , give await for it done first
-    return response.json(todo); // return the "todo" in the response
+    await Todo.addTodo({
+      title: request.body.title,
+      dueDate: request.body.dueDate,
+    });
+    return response.redirect("/");
   } catch (error) {
     console.log(error);
-    return response.status(422).json(error); // status(422) says "unprosaseble entry" , mean there is an "error"
+    return response.status(422).json(error);
   }
 });
 
-// it like as , PUT http://mytodoapp.com/todos/123/markAsCompleted
-app.put("/todos/:id/markAsCompleted", async (request, response) => {
-  // console.log("We have to update the todo with ID", request.params.id); //this update our todo with the ID
-  const todo = await Todo.findByPk(request.params.id); // this "findByPk()" take ansingle ID which is given in the (..)
+// // it like as , PUT http://mytodoapp.com/todos/123/markAsCompleted
+// app.put("/todos/:id/markAsCompleted", async (request, response) => {
+//   // console.log("We have to update the todo with ID", request.params.id); //this update our todo with the ID
+//   const todo = await Todo.findByPk(request.params.id); // this "findByPk()" take ansingle ID which is given in the (..)
 
+//   try {
+//     const updatedTodo = await todo.markAsCompleted(); // call the "markAsCompleted()"
+//     return response.json(updatedTodo); // return the "updatedTodo" in the response
+//   } catch (error) {
+//     console.log(error);
+//     return response.status(422).json(error); // status(422) says "unprosaseble entry" , mean there is an "error"
+//   }
+// });
+
+app.put("/todos/:id", async function (request, response) {
+  const todo = await Todo.findByPk(request.params.id);
   try {
-    const updatedTodo = await todo.markAsCompleted(); // call the "markAsCompleted()"
-    return response.json(updatedTodo); // return the "updatedTodo" in the response
+    const updatedTodo = await todo.markAsCompleted(true);
+    return response.json(updatedTodo);
   } catch (error) {
     console.log(error);
-    return response.status(422).json(error); // status(422) says "unprosaseble entry" , mean there is an "error"
+    return response.status(422).json(error);
   }
 });
 
 app.delete("/todos/:id", async (request, response) => {
-  console.log("We have to delete a Todo with ID: ", request.params.id);
+  console.log("Delete a todo by ID:", request.params.id);
 
   try {
-    const deleteTodo = await Todo.destroy({
+    const deletedItem = await Todo.destroy({
       where: {
         id: request.params.id,
       },
     });
-    response.send(deleteTodo ? true : false);
+    response.send(deletedItem ? true : false);
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    return response.status(442).json(error);
   }
 });
 

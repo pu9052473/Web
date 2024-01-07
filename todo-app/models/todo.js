@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* this is auto generate by "npx sequelize-cli model:generate --name Todo --attributes title:string,dueDate:dateonly,completed:boolean" */
 "use strict";
-const { Model } = require("sequelize");
+const { Model, Op } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Todo extends Model {
     /**
@@ -19,18 +19,57 @@ module.exports = (sequelize, DataTypes) => {
       return this.create({ title: title, dueDate: dueDate, completed: false });
     }
 
-    static getTodos() {
+    static getTodo() {
       return this.findAll();
     }
 
     // use intens method for update the "markAsCompleted"
-    markAsCompleted() {
-      return this.update({ completed: true });
-    }
+    // markAsCompleted() {
+    //   return this.update({ completed: true });
+    // }
 
     // to delete the route from the postman
     static deletetodo() {
-      return this.destroy();
+      return this.destroy({ where: { id: this.id } });
+    }
+
+    static async dueLater() {
+      return this.findAll({
+        where: {
+          dueDate: {
+            [Op.gt]: new Date().toISOString().split("T")[0],
+          },
+          completed: false,
+        },
+        order: [["id", "ASC"]],
+      });
+    }
+
+    static async overdue() {
+      return this.findAll({
+        where: {
+          dueDate: {
+            [Op.lt]: new Date().toISOString().split("T")[0],
+          },
+          completed: false,
+        },
+        order: [["id", "ASC"]],
+      });
+    }
+
+    static async dueToday() {
+      return this.findAll({
+        where: {
+          dueDate: {
+            [Op.eq]: new Date().toISOString().split("T")[0],
+          },
+          completed: false,
+        },
+        order: [["id", "ASC"]],
+      });
+    }
+    markAsCompleted(bool) {
+      return this.update({ completed: bool });
     }
   }
 
@@ -43,7 +82,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "Todo",
-    }
+    },
   );
   return Todo;
 };

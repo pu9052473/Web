@@ -1,33 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="./css/style.css" rel="stylesheet">
     <title>Document</title>
+    <link rel="stylesheet" href="./css/styles.css">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body>
-    <!-- this is an javascript code , this include the all content which is in the "header.ejs" file contain -->
-    <%- include('header.ejs') %>  
-
-    
-<table>
-    <!-- we create a for loop for display the allTodos -->
-    <% for( var i = 0 ; i < allTodos.length ; i++) { %>
-        <tr>
-            <td> 
-                <%= allTodos[i].title %>
-            </td>
-          </tr>
-
-          <tr>
-            <td> 
-                <%= allTodos[i].dueDate %>
-            </td>
-          </tr>
-
-   <% } %>
-</table>
+    <div class="header grid grid-cols-6">
+        <div class="col-start-3 col-span-2">
+            <%- include('header.ejs') %>
+                <form action="/todos" method="post">
+                    <div class="flex gap-2 py-4">
+                        <div class="flex-auto">
+                            <input class="border border-gray-300 rounded text-gray-900 w-full p-2 text-sm" type="text" placeholder="What Next!" name="title" required />
+                        </div>
+                        <div class="flex-auto">
+                            <input type="date" name="dueDate" class="border border-gray-300 rounded text-gray-900 w-full p-2 text-sm  leading-4" />
+                        </div>
+                        <div class="flex-none">
+                            <button class="bg-green-600 text-white px-5 py-1.5 rounded font-medium mr-2" type="submit">Add</button>
+                        </div>
+                    </div>
+                </form>
+                <!--<div>
+                    <h5>Overdue</h5>
+                    <ul class="list-none">
+                        <li class="TodoItem">
+                            <div class="flex w-fit items-center my-2 px-2 py-1 pr-2 rounded hover:bg-gray-100 bg cover">
+                                <input id="checkbox1" type="checkbox"
+                                    class="mr-2 w-4 h-4 dark:border-white-400/20 dark:scale-100 transition-all duration-500 ease-in-out dark:hover:scale-110 dark:checked:scale-100 w-10 h-10" />
+                                <label for="checkbox1" class=" text-sm text-blue-700 cursor-pointer">My First
+                                    Task</label>
+                                <a href="#" class="ml-4 hidden trash-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor" class="w-4 h-4 ">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="TodoItem">
+                            <div class="flex w-fit items-center my-2 px-2 py-1 pr-2 rounded hover:bg-gray-100">
+                                <input id="checkbox2" type="checkbox"
+                                    class="mr-2 w-4 h-4 dark:border-white-400/20 dark:scale-100 transition-all duration-500 ease-in-out dark:hover:scale-110 dark:checked:scale-100 w-10 h-10" />
+                                <label for="checkbox2" class=" text-sm text-blue-700 cursor-pointer">My second
+                                    Task</label>
+                                <a href="#" class="ml-2 hidden trash-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor" class="w-4 h-4 ">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                    <h5>Due Today</h5>
+                    <h5>Due Later</h5>
+                </div>-->
+        </div>
+    </div>
+    </div>
+    <div class=" footer grid grid-cols-6 bottom-px">
+        <div class="container col-start-3 col-span-2 ">
+            <%- include('todo.ejs') %>
+        </div>
+    </div>
+    <div class=" footer grid grid-cols-6 bottom-px">
+        <div class=" col-start-3 col-span-2">
+            <%- include('footer.ejs') %>
+        </div>
+    </div>
 
 </body>
+
 </html>
