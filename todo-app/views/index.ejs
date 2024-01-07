@@ -5,8 +5,57 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Todo-List</title>
-    <link rel="stylesheet" href="./css/styles.css">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./css/style.css">
+    <script>
+
+        function updateTodo(id) {
+        fetch(`/todos/${id}/markAsCompleted` , {
+             method: "put",
+             headers: { "content-type": "aplication/json" },
+            })
+               .then((res) => {
+                  if (res.ok) {
+                    window.location.reload();
+                  }
+                })
+               .catch((err) => console.log(err))
+        }
+
+        // const checkboxid = document.querySelector(`checkbox${id}`);
+        //     const tododata = checkboxid.checked;
+        //     // const tododata = document.querySelector(`#checkbox${id}`).checked //Here # Indicates that what follows is an ID selector.
+
+        //     fetch(`/todos/${id}/markAsCompletd`, {  //Route To be send
+        //         method: "put", //Specefies Methode It can Be any
+        //         headers: { "content-type": "aplication/json" },
+        //         body: JSON.stringify({ //Gives A request with body
+        //             completed: tododata,
+        //         })
+        //     })
+        //         .then((res) => {
+        //             if (res.ok) { //checking if response is true
+        //                 window.location.reload(); //Reload Page
+        //             }
+        //         })
+        //         .catch((err) => console.log(err)) //Logs Error
+        
+    
+
+    function deleteTodo(id) {
+        fetch(`/todos/${id}/delete`, {
+            method: "delete",
+            headers: { "content-type": "aplication/json" },
+        })
+        .then((res) => {
+                if (res.ok) {
+                    window.location.reload();
+                }
+            })
+            .catch((err) => console.log(err));
+// 
+    }
+    </script>
 </head>
 
 <body>

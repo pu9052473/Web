@@ -39,22 +39,17 @@ app.get("/", async function (request, response) {
 app.use(express.static(path.join(__dirname, "public")));
 app.set("view engine", "ejs"); // it calls file who have ejs and set that as view engine
 
-// app.get("/", async (request, response) => {
-//   const allTodos = await Todo.getTodos();
-//   if (request.accepts("html")) {
-//     // if there is an "html" inside the web page then ,
-//     response.render("index", {
-//       // takes render the index
-//       allTodos, // call allTodos tha contais all todo list
-//     });
-//   } else {
-//     response.json({
-//       // else there is an json from the postman then also
-//       allTodos, // call allTodos tha contais all todo list
-//     });
-//   }
-// });
+app.get("/todos/:id", async function (request, response) {
+  try {
+    const todo = await Todo.findByPk(request.params.id);
+    return response.json(todo);
+  } catch (error) {
+    console.log(error);
+    return response.status(422).json(error);
+  }
+});
 
+// this is for localhost
 app.post("/todos", async (request, response) => {
   // use async for to give the condition which will work first
   console.log("Creating a todo", request.body); // this post the our todo , that we are created
@@ -73,67 +68,37 @@ app.post("/todos", async (request, response) => {
   }
 });
 
-app.get("/todos", async (request, response) => {
-  console.log("Processing list of all Todos ...");
+// this is for localhost
+// it like as , PUT http://mytodoapp.com/todos/123/markAsCompleted
+app.put("/todos/:id/markAsCompleted", async (request, response) => {
+  // console.log("We have to update the todo with ID", request.params.id); //this update our todo with the ID
+  const todo = await Todo.findByPk(request.params.id); // this "findByPk()" take ansingle ID which is given in the (..)
 
   try {
-    const todos = await Todo.findAll();
-    return response.json(todos);
+    const status = todo.completed;
+    // aplied the logic og toggle the completion
+    const updatedTodo = await todo.toggleCompletionStatus(status); // call the "markAsCompleted()"
+    return response.json(updatedTodo); // return the "updatedTodo" in the response
   } catch (error) {
     console.log(error);
-    return response.status(500).json({ error: "Internal Server Error" });
+    return response.status(422).json(error); // status(422) says "unprosaseble entry" , mean there is an "error"
   }
 });
 
-app.get("/todos/:id", async function (request, response) {
-  try {
-    const todo = await Todo.findByPk(request.params.id);
-    return response.json(todo);
-  } catch (error) {
-    console.log(error);
-    return response.status(422).json(error);
-  }
-});
-
-app.post("/todos", async function (request, response) {
-  try {
-    await Todo.addTodo({
-      title: request.body.title,
-      dueDate: request.body.dueDate,
-    });
-    return response.redirect("/");
-  } catch (error) {
-    console.log(error);
-    return response.status(422).json(error);
-  }
-});
-
-// // it like as , PUT http://mytodoapp.com/todos/123/markAsCompleted
-// app.put("/todos/:id/markAsCompleted", async (request, response) => {
-//   // console.log("We have to update the todo with ID", request.params.id); //this update our todo with the ID
-//   const todo = await Todo.findByPk(request.params.id); // this "findByPk()" take ansingle ID which is given in the (..)
-
+// this is for onine render
+// app.put("/todos/:id", async function (request, response) {
+//   const todo = await Todo.findByPk(request.params.id);
 //   try {
-//     const updatedTodo = await todo.markAsCompleted(); // call the "markAsCompleted()"
-//     return response.json(updatedTodo); // return the "updatedTodo" in the response
+//     const updatedTodo = await todo.markAsCompleted(true);
+//     return response.json(updatedTodo);
 //   } catch (error) {
 //     console.log(error);
-//     return response.status(422).json(error); // status(422) says "unprosaseble entry" , mean there is an "error"
+//     return response.status(422).json(error);
 //   }
 // });
 
-app.put("/todos/:id", async function (request, response) {
-  const todo = await Todo.findByPk(request.params.id);
-  try {
-    const updatedTodo = await todo.markAsCompleted(true);
-    return response.json(updatedTodo);
-  } catch (error) {
-    console.log(error);
-    return response.status(422).json(error);
-  }
-});
-
-app.delete("/todos/:id", async (request, response) => {
+// this is for online render
+app.delete("/todos/:id/delete", async (request, response) => {
   console.log("Delete a todo by ID:", request.params.id);
 
   try {

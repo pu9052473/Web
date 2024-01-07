@@ -24,9 +24,15 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     // use intens method for update the "markAsCompleted"
-    // markAsCompleted() {
-    //   return this.update({ completed: true });
-    // }
+    markAsCompleted() {
+      return this.update({ completed: true });
+    }
+
+    // toggle status of complitation give alternate if "true" then it change to "false"
+    toggleCompletionStatus(comp) {
+      const notcomp = !comp;
+      return this.update({ completed: notcomp });
+    }
 
     // to delete the route from the postman
     static deletetodo() {
@@ -39,7 +45,7 @@ module.exports = (sequelize, DataTypes) => {
           dueDate: {
             [Op.lt]: new Date().toISOString().split("T")[0],
           },
-          completed: false,
+          // completed: false,
         },
         order: [["id", "ASC"]],
       });
@@ -51,7 +57,7 @@ module.exports = (sequelize, DataTypes) => {
           dueDate: {
             [Op.eq]: new Date().toISOString().split("T")[0],
           },
-          completed: false,
+          // completed: false,
         },
         order: [["id", "ASC"]],
       });
@@ -63,15 +69,23 @@ module.exports = (sequelize, DataTypes) => {
           dueDate: {
             [Op.gt]: new Date().toISOString().split("T")[0],
           },
-          completed: false,
+          // completed: false,
         },
         order: [["id", "ASC"]],
       });
     }
 
-    markAsCompleted(bool) {
-      return this.update({ completed: bool });
+    static async remove(id) {
+      return this.destroy({
+        where: {
+          id,
+        },
+      });
     }
+
+    //   markAsCompleted(bool) {
+    //     return this.update({ completed: bool });
+    //   }
   }
 
   Todo.init(
