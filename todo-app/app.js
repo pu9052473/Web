@@ -6,13 +6,13 @@ const app = express(); // create app inside the express module
 const { Todo } = require("./models"); // for the todo work we connect to the "models"
 const path = require("path");
 const bodyParser = require("body-parser"); // for the work "request.body" of (app.post)
-var csrf = require("csurf");
+var csrf = require("tiny-csrf");
 const cookieParser = require("cookie-parser");
 
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser("shh! some secret string"));
-app.use(csrf({ cookie: true }));
+app.use(csrf("this_should_be_32_character_long", ["POST", "PUT", "DELETE"]));
 
 /* Syntax of route :
     app.METHOD(PATH,HANDLER)                   // METHOD always in small letter like , get,delete,post,etc.
@@ -36,7 +36,7 @@ app.get("/", async function (request, response) {
       overdueTodos,
       dueTodayTodos,
       dueLaterTodos,
-      // completed,
+      completed,
       csrfToken: request.csrfToken(),
     });
   } else {
@@ -45,7 +45,7 @@ app.get("/", async function (request, response) {
       overdueTodos,
       dueTodayTodos,
       dueLaterTodos,
-      //  completed,
+      completed,
     });
   }
 });
@@ -65,7 +65,7 @@ app.get("/todos", async function (request, response) {
       overdueTodos,
       dueTodayTodos,
       dueLaterTodos,
-      // completed,
+      completed,
     });
   } catch (error) {
     console.log(error);
