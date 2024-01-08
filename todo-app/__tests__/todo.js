@@ -1,15 +1,21 @@
+/* eslint-disable no-undef */
 const request = require("supertest");
-
+var cheerio = require("cheerio");
 const db = require("../models/index");
 // const { DESCRIBE } = require("sequelize/types/query-types");
 const app = require("../app");
 
 let server, agent;
 
+function extractCsrfToken(res) {
+  var $ = cheerio.load(res.text);
+  return $("[name=_csrf]").val();
+}
+
 describe("Todo Application", function () {
   beforeAll(async () => {
     await db.sequelize.sync({ force: true });
-    server = app.listen(3000, () => {});
+    server = app.listen(4000, () => {});
     agent = request.agent(server);
   });
 
@@ -23,23 +29,26 @@ describe("Todo Application", function () {
   });
 
   test("Creates a todo and responds with json at /todos POST endpoint", async () => {
+    const res = await agent.get("/");
+    const csrfToken = extractCsrfToken(res);
     const response = await agent.post("/todos").send({
       title: "Buy milk",
       dueDate: new Date().toISOString(),
       completed: false,
+      _csrf: csrfToken,
     });
     expect(response.statusCode).toBe(302); //302 is success code for http redirect
   });
 
   test("Toogles completion status)if true then do false and vice versa", async () => {
-    //  let res = await agent.get("/");
-    // let token = extractCsrf(res);
+    let res = await agent.get("/");
+    let csrfToken = extractCsrfToken(res);
     //creating todo
     await agent.post("/todos").send({
       title: "check toggle of completion",
       dueDate: new Date().toISOString().split("T")[0],
       completed: false,
-      // _csrf: token,
+      _csrf: csrfToken,
     });
     //getting all todos from database
     const groupOfTodos = await agent
@@ -54,14 +63,14 @@ describe("Todo Application", function () {
 
     console.log("Last Todo", lastTodo);
 
-    // res = await agent.get("/");
-    // token = extractCsrf(res);
+    res = await agent.get("/");
+    csrfToken = extractCsrfToken(res);
 
     const updatedresponse1 = await agent
       .put(`/todos/${lastTodo.id}/markAsCompleted`)
       .send({
         completed: booleanValue,
-        // _csrf: token,
+        _csrf: csrfToken,
       });
     const updatedparsedResponse = JSON.parse(updatedresponse1.text);
     const oppositeboolean = !booleanValue; //after updated value
