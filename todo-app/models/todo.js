@@ -39,6 +39,14 @@ module.exports = (sequelize, DataTypes) => {
       return this.destroy({ where: { id: this.id } });
     }
 
+    static completedItem() {
+      //In order to get only completed Todos
+      return this.findAll({
+        where: { completed: true },
+        order: [["id", "ASC"]],
+      });
+    }
+
     static async overdue() {
       return this.findAll({
         where: {

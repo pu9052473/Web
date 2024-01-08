@@ -6,8 +6,13 @@ const app = express(); // create app inside the express module
 const { Todo } = require("./models"); // for the todo work we connect to the "models"
 const path = require("path");
 const bodyParser = require("body-parser"); // for the work "request.body" of (app.post)
-app.use(express.urlencoded({ extended: false }));
+var csrf = require("csurf");
+const cookieParser = require("cookie-parser");
+
 app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser("shh! some secret string"));
+app.use(csrf({ cookie: true }));
 
 /* Syntax of route :
     app.METHOD(PATH,HANDLER)                   // METHOD always in small letter like , get,delete,post,etc.
@@ -21,6 +26,7 @@ app.get("/", async function (request, response) {
   const overdueTodos = await Todo.overdue();
   const dueTodayTodos = await Todo.dueToday();
   const dueLaterTodos = await Todo.dueLater();
+  const completed = await Todo.completedItem();
   // const markAsCompleted = await Todo.markAsCompleted();
   // const Delete = await Todo.deletetodo({ where: { id: Todo.id } })
 
@@ -30,14 +36,42 @@ app.get("/", async function (request, response) {
       overdueTodos,
       dueTodayTodos,
       dueLaterTodos,
+      // completed,
+      csrfToken: request.csrfToken(),
     });
   } else {
-    response.json({ allTodo });
+    response.json({
+      allTodo,
+      overdueTodos,
+      dueTodayTodos,
+      dueLaterTodos,
+      //  completed,
+    });
   }
 });
 
 app.use(express.static(path.join(__dirname, "public")));
 app.set("view engine", "ejs"); // it calls file who have ejs and set that as view engine
+
+app.get("/todos", async function (request, response) {
+  try {
+    const allTodo = await Todo.getTodo();
+    const overdueTodos = await Todo.overdue();
+    const dueTodayTodos = await Todo.dueToday();
+    const dueLaterTodos = await Todo.dueLater();
+    const completed = await Todo.completedItem();
+    response.json({
+      allTodo,
+      overdueTodos,
+      dueTodayTodos,
+      dueLaterTodos,
+      // completed,
+    });
+  } catch (error) {
+    console.log(error);
+    return response.status(500).json({ error: "Internal server error" });
+  }
+});
 
 app.get("/todos/:id", async function (request, response) {
   try {
@@ -113,10 +147,5 @@ app.delete("/todos/:id/delete", async (request, response) => {
     return response.status(442).json(error);
   }
 });
-
-// app.listen(3000, () => {
-//   // the server port at this present
-//   console.log("Started express server at port 3000");
-// });
 
 module.exports = app;
