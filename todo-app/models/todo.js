@@ -10,13 +10,22 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
+      // define relation with the "userId"
+      Todo.belongsTo(models.User, {
+        foreignKey: "userId",
+      });
       // define association here
     }
 
     // create the todo by static method with is connected to the "index.js"
     // we use this because we made a single or more update in this todo , that affect and connect the all todo which is connected to this todo
-    static addTodo({ title, dueDate }) {
-      return this.create({ title: title, dueDate: dueDate, completed: false });
+    static addTodo({ title, dueDate, userId }) {
+      return this.create({
+        title: title,
+        dueDate: dueDate,
+        completed: false,
+        userId,
+      });
     }
 
     static getTodo() {
@@ -35,49 +44,58 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     // to delete the route from the postman
-    static deletetodo() {
-      return this.destroy({ where: { id: this.id } });
+    static deletetodo(userId) {
+      return this.destroy({
+        where: {
+          id: this.id,
+          //  userId
+        },
+      });
     }
 
-    static completedItem() {
+    static completedItem(userId) {
       //In order to get only completed Todos
       return this.findAll({
         where: { completed: true },
         order: [["id", "ASC"]],
+        userId, // we ste "userId" that checks the user-id , if the given id is same to "userId" , only then it shows theirs todos
       });
     }
 
-    static async overdue() {
+    static async overdue(userId) {
       return this.findAll({
         where: {
+          completed: false,
+          userId,
           dueDate: {
             [Op.lt]: new Date().toISOString().split("T")[0],
           },
-          // completed: false,
         },
         order: [["id", "ASC"]],
       });
     }
 
-    static async dueToday() {
+    static async dueToday(userId) {
       return this.findAll({
         where: {
+          completed: false,
+          userId,
           dueDate: {
             [Op.eq]: new Date().toISOString().split("T")[0],
           },
-          // completed: false,
         },
         order: [["id", "ASC"]],
       });
     }
 
-    static async dueLater() {
+    static async dueLater(userId) {
       return this.findAll({
         where: {
+          completed: false,
+          userId,
           dueDate: {
             [Op.gt]: new Date().toISOString().split("T")[0],
           },
-          // completed: false,
         },
         order: [["id", "ASC"]],
       });
@@ -87,20 +105,33 @@ module.exports = (sequelize, DataTypes) => {
       return this.destroy({
         where: {
           id,
+          // userId, // it checks the corrent id is same to user-id then , only specified todo is deleted from their specified id , noy delete todo from another id
         },
       });
     }
-
-    //   markAsCompleted(bool) {
-    //     return this.update({ completed: bool });
-    //   }
   }
 
   Todo.init(
     {
-      title: DataTypes.STRING,
-      dueDate: DataTypes.DATEONLY,
-      completed: DataTypes.BOOLEAN,
+      title: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notNull: true,
+          len: 5,
+        },
+      },
+      dueDate: {
+        type: DataTypes.DATEONLY,
+        allowNull: false,
+        validate: {
+          notNull: true,
+          len: 5,
+        },
+      },
+      completed: {
+        type: DataTypes.BOOLEAN,
+      },
     },
     {
       sequelize,
