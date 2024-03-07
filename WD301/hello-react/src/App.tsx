@@ -1,10 +1,8 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
 import Taskcard from './TaskCard' //importing the "TaskCard" "component" from "TaskCard.jsx"
+import React from 'react'
 
-function App() {
+const App: React.FC = () => {
   // let message = "Hii there"
   // if (Math.random() > 0.5) { // "Math.random()" fun. give random num every time when page is refresh 
   //   message = "Bye there"
@@ -21,8 +19,8 @@ function App() {
       <div className='flex justify-center h-[75vh]'>
         <div className='flex flex-col items-center  w-[40vw] border rounded-2xl  border-blue-400 mr-10'>
           <h1 className='text-blue-800 text-3xl my-4 ' >Pending</h1>
-          <Taskcard title = "Build the website with static content" date = "10th April" name = "Rohit S" id = "pending" />
-          <Taskcard title = "Add a blog" date = "22nd March" name = "Rahul m" id = "pending"/>
+          <Taskcard title = {"Build the website with static content"} dueDate = {"10th April"} assigneeName = {"Rohit S"} completed = {false} />
+          <Taskcard title = {"Add a blog"} dueDate = {"22nd March"} assigneeName = {"Rahul m"} completed = {false}/>
           <div className='flex w-[35vw] text-2xl font-bold text-blue-600 items-center px-1 h-[5.5vh] border rounded-md'>
           <a href="#" className='bg-gray-200 rounded-s-md px-0.5'>+</a>
           <a href="#" className='bg-gray-200 w-full rounded-e-md'>New task</a>
@@ -30,8 +28,8 @@ function App() {
         </div>
         <div className='flex flex-col items-center w-[40vw] mx-auto border rounded-2xl border-blue-400'>
           <h1 className='text-blue-800 text-3xl my-4 '>Done</h1>
-          <Taskcard title = "Design the Mockup" date = "10th April" name = "Rohit M" id = "done" />
-          <Taskcard title = "Get the approval from principal " date = "20nd April" name = "Ajay S" id = "done" />
+          <Taskcard title = {"Design the Mockup"} dueDate = {"10th March"} completedDate = {"10th April"} assigneeName = {"Rohit M"} completed = {true}/>
+          <Taskcard title = {"Get the approval from principal"} dueDate = {"20nd March"} completedDate = {"20th April"} assigneeName = {"Ajay S"} completed = {true} />
         </div>
       </div>
   </div>
