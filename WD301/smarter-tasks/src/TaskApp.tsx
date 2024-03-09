@@ -42,9 +42,15 @@ class TaskApp extends React.Component<TaskAppProp, TaskAppState> {
               Pending
             </h1>
             <TaskForm addTask={this.addTask} />
+          </div>
+          <div className="flex justify-center my-2">
+            <p className="text-3xl text-slate-500 font-bold ">Tasks</p>
+          </div>
+          <div className="mx-auto w-[55vw]">
             <TaskList tasks={this.state.tasks} />
           </div>
         </div>
+        
       </div>
     );
   }
