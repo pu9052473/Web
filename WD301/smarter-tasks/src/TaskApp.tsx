@@ -28,15 +28,15 @@ class TaskApp extends React.Component<TaskAppProp, TaskAppState> {
 
   render() {
     return (
-        <div className="container py-5 w-[55vw] mx-auto">
+        <div className="container py-5 w-[45vw] mx-auto font-serif">
         <h1 className="text-3xl mb-2 font-bold text-blue-700">
           Smarter Tasks
         </h1>
-        <h1 className="text-lg mb-5 text-slate-500">
+        <h1 className="text-lg mb-5 text-slate-600">
           <span className="font-bold">Project: </span>
           Graduation Final Year Project (Revamp college website)
         </h1>
-        <div className="mx-auto w-[55vw]">
+        <div className="mx-auto w-[45vw]">
           <div className="border-blue-500 border-2 rounded-xl p-2">
             <h1 className="text-blue-700 text-3xl font-bold text-center mb-2">
               Pending
@@ -44,9 +44,9 @@ class TaskApp extends React.Component<TaskAppProp, TaskAppState> {
             <TaskForm addTask={this.addTask} />
           </div>
           <div className="flex justify-center my-2">
-            <p className="text-3xl text-slate-500 font-bold ">Tasks</p>
+            <p className="text-3xl text-slate-600 font-bold ">Tasks</p>
           </div>
-          <div className="mx-auto w-[55vw]">
+          <div className="mx-auto w-[45vw]">
             <TaskList tasks={this.state.tasks} />
           </div>
         </div>

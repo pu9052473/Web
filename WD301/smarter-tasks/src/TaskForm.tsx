@@ -80,11 +80,11 @@ class TaskForm extends React.Component<TaskFormProps, TaskFormState> {
       return (
         <form onSubmit={this.addTask}>
           <div className="flex mx-auto w-[40vw] justify-evenly mt-5 mb-2">
-            <input type="text" id="todoTitle" value={this.state.title} onChange={this.titleChanged} placeholder="Enter The Task" required  className=" w-[30vw] rounded-md border-blue-500 px-1.5 border-2 text-lg  placeholder-slate-500"/>
-            <input type="date" id="todoDueDate" value={this.state.date} onChange={this.dateChanged} required className="rounded-md border-blue-500 border-2 text-slate-500"/>
+            <input type="text" id="todoTitle" value={this.state.title} onChange={this.titleChanged} placeholder="Enter The Task" required  className=" w-[30vw] rounded-md border-blue-500 px-1.5 border-2 text-lg  placeholder-slate-600"/>
+            <input type="date" id="todoDueDate" value={this.state.date} onChange={this.dateChanged} required className="rounded-md border-blue-500 border-2 text-slate-600"/>
           </div>
-            <textarea id="todoDescription" value={this.state.description} onChange={this.descriptionChanged} placeholder="Enter description" className="flex mx-auto w-[39.5vw] justify-evenly my-2 rounded-md border-blue-500 px-1.5 border-2 text-lg  placeholder-slate-500" />
-            <button type="submit" id="addTaskButton" className="flex mx-auto rounded-md border-2 bg-blue-300 border-blue-500 px-1.5 text-lg justify-center">Add items</button>
+            <textarea id="todoDescription" value={this.state.description} onChange={this.descriptionChanged} placeholder="Enter description" required className="flex mx-auto w-[39.5vw] justify-evenly my-2 rounded-md border-blue-500 px-1.5 border-2 text-lg  placeholder-slate-600" />
+            <button type="submit" id="addTaskButton" className="flex mx-auto rounded-md border-2 bg-blue-300 border-blue-500 px-1.5 text-lg justify-center text-blue-700">Add items</button>
         </form>
       )
   }
