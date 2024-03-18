@@ -7,10 +7,6 @@ interface Props{
     onDelete: (index: number) => void;
 }
 
-//  interface State{
-//     // tasks: TaskItems[]
-//  }
-
 /* // this is "class based method"
 class TaskList extends React.Component<Props, State>{
 
