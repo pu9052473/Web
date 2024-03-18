@@ -28,8 +28,8 @@ const Task = (props:TaskItems) => {
               <p className="mr-2"> {props.title} </p> 
               <p> ({props.dueDate})</p>
             </div>
-            <div className="text-slate-600 text-lg break-words">
-              <p>:- {props.description}</p>
+            <div className="flex text-slate-600 text-lg">
+              <p className=" w-[25vw] whitespace-normal break-words">:- {props.description}</p>
             </div>
         </div>
     )

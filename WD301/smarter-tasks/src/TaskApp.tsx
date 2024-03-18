@@ -117,7 +117,7 @@ const TaskApp = () => {
           <div className="flex justify-center my-2">
             <p className="text-3xl text-slate-600 font-bold ">Tasks</p>
           </div>
-          <div className="mx-auto w-[45vw]">
+          <div className="mx-auto w-[30vw]">
             <TaskList tasks={taskAppState.tasks} onDelete = {deletetask}/>
           </div>
         </div>
