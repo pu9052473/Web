@@ -4,7 +4,7 @@ import TaskForm from "./TaskForm";
 import TaskList from "./TaskList";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 
-interface TaskAppProp {}
+// interface TaskAppProp {}
 
 interface TaskAppState {
   tasks: TaskItems[];
